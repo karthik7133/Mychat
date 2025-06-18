@@ -23,8 +23,9 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("test");
-        db.setValue("Hello Firebase!");
+        FirebaseDatabase fdb=FirebaseDatabase.getInstance();
+        DatabaseReference ref=fdb.getReference("message");
+        ref.setValue("Hello world!");
 
     }
 }
