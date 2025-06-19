@@ -39,12 +39,17 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
+        Message msg = messageList.get(position);
+        if (holder instanceof RightViewHolder) {
+            ((RightViewHolder) holder).text.setText(msg.getMessage());
+        } else {
+            ((LeftViewHolder) holder).text.setText(msg.getMessage());
+        }
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return messageList.size();
     }
 
     @Override

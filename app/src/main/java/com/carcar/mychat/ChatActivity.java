@@ -1,6 +1,8 @@
 package com.carcar.mychat;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -8,13 +10,16 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,14 +47,35 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_chat);
+        Window window=getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.neon_violate));
 
 
         messageInput = findViewById(R.id.messageInput);
         sendButton = findViewById(R.id.sendButton);
         recyclerView = findViewById(R.id.recyclerView);
 
-        currentUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getPhoneNumber(); // or UID
-        receiverUser = getIntent().getStringExtra("receiverPhone");
+         receiverUser = getIntent().getStringExtra("receiverPhone");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        currentUser = "+919812345678";
+
+// Log the values before using them
+        Log.d("ChatActivity", "Receiver Phone: " + receiverUser);
+        Log.d("ChatActivity", "Current User Phone: " + currentUser);
+
+// Safe null check before compareTo
+        if (receiverUser != null && currentUser != null) {
+            if (currentUser.compareTo(receiverUser) < 0) {
+                // Your logic
+            } else {
+                // Your logic
+            }
+        } else {
+            Log.e("ChatActivity", "One of the phone numbers is null");
+            Toast.makeText(this, "Error: Missing user info", Toast.LENGTH_SHORT).show();
+            finish(); // optional, to prevent further execution
+        }
+
 
         assert receiverUser != null;
         chatId = currentUser.compareTo(receiverUser) < 0 ?
