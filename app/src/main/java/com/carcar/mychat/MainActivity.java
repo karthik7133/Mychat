@@ -1,6 +1,8 @@
 package com.carcar.mychat;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,9 +25,12 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        FirebaseDatabase fdb=FirebaseDatabase.getInstance();
-        DatabaseReference ref=fdb.getReference("message");
-        ref.setValue("Hello world!");
+        Button btn =findViewById(R.id.btnStartChat);
+        btn.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+            intent.putExtra("receiverPhone", "+919876543210"); // Hardcoded for now
+            startActivity(intent);
+        });
 
     }
 }
