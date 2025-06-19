@@ -3,7 +3,8 @@ package com.carcar.mychat;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+
+import android.util.Log;
 import android.view.Window;
 import android.widget.Toast;
 
@@ -54,6 +55,12 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(view -> {
             startActivity(new Intent(MainActivity.this, NewChatActivity.class));
         });
+        Log.d("MainActivity", "Loaded chat list size: " + chatList.size());
+        for (ChatListItem item : chatList) {
+            Log.d("MainActivity", "Chat with: " + item.phone + ", last message: " + item.lastMessage);
+        }
+        Log.d("MainActivity", "Current user phone: " + currentUserPhone);
+
 
         // Load chat list
         loadChatList();
@@ -70,17 +77,25 @@ public class MainActivity extends AppCompatActivity {
                     String phone = ds.getKey();
                     String lastMessage = ds.child("lastMessage").getValue(String.class);
                     Long timestamp = ds.child("timestamp").getValue(Long.class);
+
+                    Log.d("MainActivity", "Found chat with: " + phone + " msg: " + lastMessage);
+
                     if (phone != null && lastMessage != null && timestamp != null) {
                         chatList.add(new ChatListItem(phone, lastMessage, timestamp));
                     }
                 }
+
+                Log.d("MainActivity", "Loaded chat list size: " + chatList.size());
                 adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(DatabaseError error) {
                 Toast.makeText(MainActivity.this, "Failed to load chats", Toast.LENGTH_SHORT).show();
+                Log.e("MainActivity", "Firebase error: " + error.getMessage());
             }
         });
     }
+
+
 }

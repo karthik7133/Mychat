@@ -103,12 +103,33 @@ public class ChatActivity extends AppCompatActivity {
     private void sendMessage() {
         String text = messageInput.getText().toString().trim();
         if (!text.isEmpty()) {
-            long timestamp = System.currentTimeMillis();
-            Message message = new Message(currentUserPhone, receiverPhone, text, timestamp);
-            chatRef.push().setValue(message);
-            messageInput.setText("");
+            long time = System.currentTimeMillis();
+            Message msg = new Message(currentUserPhone, receiverPhone, text, time);
+
+            // Store message in the Messages node
+            chatRef.push().setValue(msg);
+
+            // Update chatlist for sender and receiver
+            DatabaseReference chatListRef = FirebaseDatabase.getInstance().getReference("chatlist");
+
+            // Sender's chat list
+            chatListRef.child(currentUserPhone).child(receiverPhone).child("lastMessage").setValue(text);
+            chatListRef.child(currentUserPhone).child(receiverPhone).child("timestamp").setValue(time);
+            chatListRef.child(currentUserPhone).child(receiverPhone).child("phone").setValue(receiverPhone);
+
+            // Receiver's chat list
+            chatListRef.child(receiverPhone).child(currentUserPhone).child("lastMessage").setValue(text);
+            chatListRef.child(receiverPhone).child(currentUserPhone).child("timestamp").setValue(time);
+            chatListRef.child(receiverPhone).child(currentUserPhone).child("phone").setValue(currentUserPhone);
+
+            messageInput.setText(""); // clear the input
         }
     }
+
+
+
+
+
 
     private void loadMessages() {
         chatRef.addValueEventListener(new ValueEventListener() {
