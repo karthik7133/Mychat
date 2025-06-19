@@ -11,10 +11,6 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,80 +24,88 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class ChatActivity extends AppCompatActivity {
-    EditText messageInput;
-    Button sendButton;
-    RecyclerView recyclerView;
 
-    MessageAdapter adapter;
-    List<Message> messageList;
+    private EditText messageInput;
+    private Button sendButton;
+    private RecyclerView recyclerView;
 
-    DatabaseReference chatRef;
-    String currentUser, receiverUser;
-    String chatId;
+    private MessageAdapter adapter;
+    private List<Message> messageList;
+
+    private DatabaseReference chatRef;
+    private String currentUserPhone, receiverPhone, chatId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_chat);
-        Window window=getWindow();
+
+        Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.neon_violate));
 
+        initializeViews();
+        getIntentData();
+        setupChatId();
+        setupRecyclerView();
+        loadMessages();
 
+        sendButton.setOnClickListener(v -> sendMessage());
+    }
+
+    private void initializeViews() {
         messageInput = findViewById(R.id.messageInput);
         sendButton = findViewById(R.id.sendButton);
         recyclerView = findViewById(R.id.recyclerView);
+    }
 
-         receiverUser = getIntent().getStringExtra("receiverPhone");
+    private void getIntentData() {
+        // Get receiver number from Intent
+        receiverPhone = getIntent().getStringExtra("receiverPhone");
+
+        // Get current user number from FirebaseAuth
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        currentUser = "+919812345678";
-
-// Log the values before using them
-        Log.d("ChatActivity", "Receiver Phone: " + receiverUser);
-        Log.d("ChatActivity", "Current User Phone: " + currentUser);
-
-// Safe null check before compareTo
-        if (receiverUser != null && currentUser != null) {
-            if (currentUser.compareTo(receiverUser) < 0) {
-                // Your logic
-            } else {
-                // Your logic
-            }
+        if (user != null && user.getPhoneNumber() != null) {
+            currentUserPhone = user.getPhoneNumber();
         } else {
-            Log.e("ChatActivity", "One of the phone numbers is null");
-            Toast.makeText(this, "Error: Missing user info", Toast.LENGTH_SHORT).show();
-            finish(); // optional, to prevent further execution
+            // For testing (hardcoded)
+            currentUserPhone = "+919812345678";
+            Toast.makeText(this, "Using test number. Auth may not be configured.", Toast.LENGTH_SHORT).show();
         }
 
+        Log.d("ChatActivity", "Receiver Phone: " + receiverPhone);
+        Log.d("ChatActivity", "Current User Phone: " + currentUserPhone);
 
-        assert receiverUser != null;
-        chatId = currentUser.compareTo(receiverUser) < 0 ?
-                currentUser + "_" + receiverUser :
-                receiverUser + "_" + currentUser;
+        if (receiverPhone == null || currentUserPhone == null) {
+            Toast.makeText(this, "Missing user info", Toast.LENGTH_SHORT).show();
+            finish(); // prevent crash
+        }
+    }
+
+    private void setupChatId() {
+        // Always store chat in predictable key order
+        chatId = currentUserPhone.compareTo(receiverPhone) < 0 ?
+                currentUserPhone + "_" + receiverPhone :
+                receiverPhone + "_" + currentUserPhone;
 
         chatRef = FirebaseDatabase.getInstance().getReference("Messages").child(chatId);
+    }
 
+    private void setupRecyclerView() {
         messageList = new ArrayList<>();
-        adapter = new MessageAdapter(this, messageList, currentUser);
+        adapter = new MessageAdapter(this, messageList, currentUserPhone);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-
-
-        // Load messages
-        loadMessages();
-
-        // Send message
-        sendButton.setOnClickListener(v -> sendMessage());
     }
-    private  void sendMessage(){
-        String text=messageInput.getText().toString().trim();
-        if(!text.isEmpty()){
-            long time=System.currentTimeMillis();
-            Message msg=new Message(currentUser,receiverUser,text,time);
-            chatRef.push().setValue(msg);
+
+    private void sendMessage() {
+        String text = messageInput.getText().toString().trim();
+        if (!text.isEmpty()) {
+            long timestamp = System.currentTimeMillis();
+            Message message = new Message(currentUserPhone, receiverPhone, text, timestamp);
+            chatRef.push().setValue(message);
             messageInput.setText("");
         }
     }
@@ -112,8 +116,10 @@ public class ChatActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 messageList.clear();
                 for (DataSnapshot snap : snapshot.getChildren()) {
-                    Message m = snap.getValue(Message.class);
-                    messageList.add(m);
+                    Message msg = snap.getValue(Message.class);
+                    if (msg != null) {
+                        messageList.add(msg);
+                    }
                 }
                 adapter.notifyDataSetChanged();
                 recyclerView.scrollToPosition(messageList.size() - 1);

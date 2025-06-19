@@ -1,35 +1,86 @@
 package com.carcar.mychat;
 
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
-import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
+
+    private RecyclerView recyclerView;
+    private List<ChatListItem> chatList;
+    private ChatListAdapter adapter;
+    private String currentUserPhone;
+    private DatabaseReference chatListRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        Button btn =findViewById(R.id.btnStartChat);
-        Window window=getWindow();
+
+        Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.neon_violate));
-        btn.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, ChatActivity.class);
-            intent.putExtra("receiverPhone", "+919876543210");
-            startActivity(intent);
+
+        // Firebase current user phone
+        currentUserPhone = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getPhoneNumber();
+
+        // Setup RecyclerView
+        recyclerView = findViewById(R.id.recyclerViewChats);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        chatList = new ArrayList<>();
+        adapter = new ChatListAdapter(chatList, this);
+        recyclerView.setAdapter(adapter);
+
+        // FloatingActionButton to start new chat
+        FloatingActionButton fab = findViewById(R.id.fabStartNewChat);
+        fab.setOnClickListener(view -> {
+            startActivity(new Intent(MainActivity.this, NewChatActivity.class));
         });
 
+        // Load chat list
+        loadChatList();
+    }
+
+    private void loadChatList() {
+        chatListRef = FirebaseDatabase.getInstance().getReference("chatlist").child(currentUserPhone);
+
+        chatListRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                chatList.clear();
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    String phone = ds.getKey();
+                    String lastMessage = ds.child("lastMessage").getValue(String.class);
+                    Long timestamp = ds.child("timestamp").getValue(Long.class);
+                    if (phone != null && lastMessage != null && timestamp != null) {
+                        chatList.add(new ChatListItem(phone, lastMessage, timestamp));
+                    }
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Toast.makeText(MainActivity.this, "Failed to load chats", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

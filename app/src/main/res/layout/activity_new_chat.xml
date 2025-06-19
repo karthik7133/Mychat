@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <EditText
+        android:id="@+id/editPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Phone Number"
+        android:inputType="phone"
+        android:textColorHint="@color/silver"
+        android:padding="12dp"
+        android:background="@drawable/gradientbackground"/>
+
+    <Button
+        android:id="@+id/btnStartChat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start Chat"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/gradientbtn2"
+        android:textColor="@color/white"/>
+
+</LinearLayout>

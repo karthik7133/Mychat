@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/black"
+    android:clickable="true"
+    android:focusable="true">
+
+    <TextView
+        android:id="@+id/textPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User Phone"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/textLastMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Last message here..."
+        android:textSize="14sp"
+        android:textColor="#646262"/>
+
+    <TextView
+        android:id="@+id/textTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="12:30 PM"
+        android:textSize="12sp"
+        android:textColor="#646262"
+        android:layout_gravity="end"/>
+
+</LinearLayout>
