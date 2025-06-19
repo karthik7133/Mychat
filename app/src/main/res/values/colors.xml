@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="neon_green">#39FF14</color>
+    <color name="neon_pink">#FF10F0</color>
+    <color name="neon_blue">#0E6BFF</color>
+    <color name="neon_yellow">#FFFF33</color>
+    <color name="neon_purple">#B026FF</color>
+    <color name="neon_orange">#FF7300</color>
+    <color name="neon_red">#FF3131</color>
+    <color name="neon_cyan">#00FFFF</color>
+    <color name="neon_lime">#32FF7E</color>
+    <color name="neon_violate">#8F00FF</color>
+    <color name="neon_turquoise">#40E0D0</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="neon_violate">#8F00FF</color>
+    <color name="startColor">#2196F3</color>
+    <color name="endColor">#4CAF50</color>
+    <color name="silver">#C0C0C0</color>
+    <color name="purpleGradient">#8A2BE2</color>  <!-- Purple -->
+    <color name="pinkGradient">#FF69B4</color>  <!-- Pink -->
+    <color name="orangeGradient">#FFA500</color>  <!-- Orange -->
+    <color name="lavenderLight">#E6E6FA</color>  <!-- Light Lavender -->
+    <color name="lavenderDark">#9370DB</color>  <!-- Dark Lavender -->
+    <color name="paleblue"> #044470</color>
+    <color name="paleblue2">#3599CD</color>
+
+
 </resources>
