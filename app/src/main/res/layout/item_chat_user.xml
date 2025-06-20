@@ -18,14 +18,6 @@
         android:textColor="@color/white"/>
 
     <TextView
-        android:id="@+id/textLastMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Last message here..."
-        android:textSize="14sp"
-        android:textColor="#646262"/>
-
-    <TextView
         android:id="@+id/textTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,5 +25,13 @@
         android:textSize="12sp"
         android:textColor="#646262"
         android:layout_gravity="end"/>
+
+    <TextView
+        android:id="@+id/textLastMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Last message here..."
+        android:textColor="#646262"
+        android:textSize="14sp" />
 
 </LinearLayout>
