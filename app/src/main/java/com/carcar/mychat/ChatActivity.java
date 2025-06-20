@@ -41,7 +41,7 @@ public class ChatActivity extends AppCompatActivity {
     private DatabaseReference chatRef;
 
     private Toolbar toolbar;
-    private String currentUserPhone, receiverPhone, chatId;
+    private String currentUserPhone, receiverPhone, chatId,lastmessage;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.chat_menu, menu);
@@ -53,10 +53,16 @@ public class ChatActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.menu_delete_chat) {
-            // Handle delete chat
-            return true;
+            DatabaseReference messagesRef = FirebaseDatabase.getInstance()
+                    .getReference("Messages").child(chatId);
+            messagesRef.removeValue();
+
+            DatabaseReference chatref=FirebaseDatabase.getInstance().getReference("chatlist");
+            chatref.child(currentUserPhone).child(receiverPhone).removeValue();
+            chatref.child(receiverPhone).child(currentUserPhone).removeValue();
+
+
         } else if (id == R.id.menu_chat_theme) {
-            // Handle change theme
             return true;
         }
 
@@ -101,11 +107,11 @@ public class ChatActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-// Set title as phone number
 
     }
 
     private void getIntentData() {
+        lastmessage=getIntent().getStringExtra("lastname");
         // Get receiver number from Intent
         receiverPhone = getIntent().getStringExtra("receiverPhone");
         Objects.requireNonNull(getSupportActionBar()).setTitle(receiverPhone);
