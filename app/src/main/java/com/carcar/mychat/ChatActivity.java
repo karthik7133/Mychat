@@ -27,6 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -97,17 +98,17 @@ public class ChatActivity extends AppCompatActivity {
 
         // Set toolbar as ActionBar
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        // Optional: set title and back button
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(receiverPhone);  // Show user number
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+// Set title as phone number
+
     }
 
     private void getIntentData() {
         // Get receiver number from Intent
         receiverPhone = getIntent().getStringExtra("receiverPhone");
+        Objects.requireNonNull(getSupportActionBar()).setTitle(receiverPhone);
 
         // Get current user number from FirebaseAuth
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
