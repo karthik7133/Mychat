@@ -5,7 +5,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-    android:padding="10dp">
+    android:padding="0dp">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/chatToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:elevation="4dp"
+        android:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
 
     <!-- RecyclerView to display messages -->
     <androidx.recyclerview.widget.RecyclerView
@@ -13,13 +22,16 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:padding="10dp"
         android:scrollbars="vertical" />
 
-    <!-- Input area with EditText and Send button -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:paddingRight="5dp"
+        android:paddingLeft="5dp"
         android:paddingTop="8dp">
 
         <EditText

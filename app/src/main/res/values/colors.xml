@@ -23,6 +23,7 @@
     <color name="lavenderDark">#9370DB</color>  <!-- Dark Lavender -->
     <color name="paleblue"> #044470</color>
     <color name="paleblue2">#3599CD</color>
+    <color name="pinkbg">#914082</color>
 
 
 </resources>

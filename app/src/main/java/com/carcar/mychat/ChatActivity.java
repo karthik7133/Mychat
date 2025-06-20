@@ -2,10 +2,13 @@ package com.carcar.mychat;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import androidx.appcompat.widget.Toolbar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -35,7 +38,35 @@ public class ChatActivity extends AppCompatActivity {
     private List<Message> messageList;
 
     private DatabaseReference chatRef;
+
+    private Toolbar toolbar;
     private String currentUserPhone, receiverPhone, chatId;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.chat_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.menu_delete_chat) {
+            // Handle delete chat
+            return true;
+        } else if (id == R.id.menu_chat_theme) {
+            // Handle change theme
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish(); // Go back to MainActivity
+        return true;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +77,14 @@ public class ChatActivity extends AppCompatActivity {
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.neon_violate));
 
+
+
         initializeViews();
         getIntentData();
         setupChatId();
         setupRecyclerView();
         loadMessages();
+
 
         sendButton.setOnClickListener(v -> sendMessage());
     }
@@ -59,6 +93,16 @@ public class ChatActivity extends AppCompatActivity {
         messageInput = findViewById(R.id.messageInput);
         sendButton = findViewById(R.id.sendButton);
         recyclerView = findViewById(R.id.recyclerView);
+        toolbar = findViewById(R.id.chatToolbar);
+
+        // Set toolbar as ActionBar
+        setSupportActionBar(toolbar);
+
+        // Optional: set title and back button
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(receiverPhone);  // Show user number
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     private void getIntentData() {

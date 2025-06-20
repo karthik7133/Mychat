@@ -7,8 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/lavenbg"
-    android:fitsSystemWindows="true"
+    android:background="@drawable/bg7"
+
     >
 
     <LinearLayout
@@ -37,6 +37,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="150dp"
             android:id="@+id/ll"
             android:orientation="vertical">
 
@@ -114,7 +115,7 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Register"
+                android:text="Verify"
                 android:layout_marginTop="20sp"
                 android:layout_gravity="center"
                 android:textColor="@color/white"

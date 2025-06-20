@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Window;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.*;
@@ -23,7 +25,8 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Window window=getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.black));
         auth = FirebaseAuth.getInstance();
 
         // ✅ Check if already logged in
@@ -39,6 +42,9 @@ public class LoginActivity extends AppCompatActivity {
         otp = findViewById(R.id.otp);
         btn = findViewById(R.id.btn);
 
+        if (!otpSent) {
+            btn.setText("Send OTP");
+        }
         btn.setOnClickListener(v -> {
             if (!otpSent) {
                 String phoneNumber = phno.getText().toString().trim();
@@ -52,12 +58,15 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 sendOTP(phoneNumber);
+
             } else {
+
                 String code = otp.getText().toString().trim();
                 if (TextUtils.isEmpty(code)) {
                     otp.setError("Enter OTP");
                     return;
                 }
+
                 verifyOTP(code);
             }
         });
